@@ -1,3 +1,4 @@
+import 'package:dartlight_standalone/editor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -43,6 +44,13 @@ class EditorScreen extends StatefulWidget {
 
 class _EditorScreenState extends State<EditorScreen> {
   double _leftPanelWidth = 0.5;
+  final TextEditingController _editorController = TextEditingController();
+
+  @override
+  void dispose() {
+    _editorController.dispose();
+    super.dispose();
+  }
 
   void _handleDrag(DragUpdateDetails details) {
     setState(() {
@@ -57,56 +65,58 @@ class _EditorScreenState extends State<EditorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-          return Row(
-            children: [
-              SizedBox(
-                width: constraints.maxWidth * _leftPanelWidth,
+      body: LayoutBuilder(builder: (context, constraints) {
+        return Row(
+          children: [
+            SizedBox(
+              width: constraints.maxWidth * _leftPanelWidth,
+              child: Container(
+                margin: const EdgeInsets.only(left: 8, top: 8, bottom: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: CodeEditor(
+                    controller: _editorController,
+                    onChanged: (value) {
+                      // Handle code changes here
+                      // print('Code changed: $value');
+                    },
+                  ),
+                ),
+              ),
+            ),
+            MouseRegion(
+              cursor: SystemMouseCursors.resizeColumn,
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onHorizontalDragUpdate: _handleDrag,
                 child: Container(
-                  margin: const EdgeInsets.only(left: 8, top: 8, bottom: 8),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Code Editor Panel',
-                      style: TextStyle(color: Colors.white),
-                    ),
+                  width: 8.0,
+                  color: Colors.transparent,
+                ),
+              ),
+            ),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(right: 8, top: 8, bottom: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(8.0),
+                ),
+                child: const Center(
+                  child: Text(
+                    'Right Panel',
+                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ),
-              MouseRegion(
-                cursor: SystemMouseCursors.resizeColumn,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onHorizontalDragUpdate: _handleDrag,
-                  child: Container(
-                    width: 8.0,
-                    color: Colors.transparent,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  margin: const EdgeInsets.only(right: 8, top: 8, bottom: 8),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: const Center(
-                    child: Text(
-                      'Right Panel',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+            ),
+          ],
+        );
+      }),
     );
   }
 }
