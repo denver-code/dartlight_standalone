@@ -78,12 +78,18 @@ class _EditorScreenState extends State<EditorScreen> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
-                  child: CodeEditor(
-                    controller: _editorController,
-                    onChanged: (value) {
-                      // Handle code changes here
-                      // print('Code changed: $value');
-                    },
+                  child: LayoutBuilder(
+                    builder: (context, constraints) => SizedBox(
+                      width: constraints.maxWidth,
+                      height: constraints.maxHeight,
+                      child: CodeEditor(
+                        controller: _editorController,
+                        onChanged: (value) {
+                          // Handle code changes here
+                          // print('Code changed: $value');
+                        },
+                      ),
+                    ),
                   ),
                 ),
               ),
