@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
       title: 'DartLight Editor',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        fontFamily: 'JetBrainsMono',
         colorScheme: ColorScheme.dark(
           primary: Colors.blue,
           secondary: Colors.blueAccent,
